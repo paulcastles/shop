@@ -4,13 +4,7 @@
 
 <h2>Your Cart</h2>
 <table>
-  <% @cart.line_items.each do |line_item| %>
-    <tr>
-      <td><%= line_item.quantity %> &times;</td>
-      <td><%= line_item.item.name %></td>
-      <td class="line_item_price"><%= number_to_currency(line_item.total_price) %></td>
-    </tr>
-  <% end %>
+  <%= render(cart.line_items) %>
   
   <tr class="total_line">
     <td colspan="2">Total</td>

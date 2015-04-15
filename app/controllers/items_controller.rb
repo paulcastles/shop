@@ -4,7 +4,12 @@ class ItemsController < ApplicationController
   # GET /items
   # GET /items.json
   def index
-    @items = Item.all
+    if params[:search_manufacturer].present? || params[:search_category].present?
+      @items = Item.search(params[:search_manufacturer], params[:search_category] ).order("created_at DESC")
+
+    else
+      @items = Item.order("created_at DESC")
+    end
   end
 
   # GET /items/1
@@ -58,6 +63,16 @@ class ItemsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to items_url, notice: 'Item was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+  
+  def who_bought
+    @item = Item.find(params[:id])
+    @latest_order = @item.orders.order(:updated_at).last
+    if stale?(@latest_order)
+      respond_to do |format|
+        format.atom
+      end
     end
   end
 

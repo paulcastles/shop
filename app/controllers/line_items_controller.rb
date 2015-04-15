@@ -24,10 +24,11 @@ class LineItemsController < ApplicationController
 
   def create
     item = Item.find(params[:item_id])
-    @line_item = @cart.line_items.build(item: item)
+    @line_item = @cart.add_item(item.id)
+    
     respond_to do |format|
       if @line_item.save
-        format.html {redirect_to @line_item.cart, notice: 'Line item was successfully created.'}
+        format.html {redirect_to @line_item.cart}
         format.json {render action: 'show', status: :created, location: @line_item}
       else
         format.html { render action: 'new'}
@@ -52,7 +53,7 @@ class LineItemsController < ApplicationController
     end
 
     def line_item_params
-      params.require(:line_item).permit(:item_id, :cart_id)
+      params.require(:line_item).permit(:item_id)
     end
 
 end
